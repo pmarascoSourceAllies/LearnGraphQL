@@ -1,0 +1,55 @@
+# Ignore build outputs
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.cache
+
+# Ignore package directories
+*.nuget/
+*.nupkg
+
+# Ignore user-specific files
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Ignore logs and database files
+*.log
+*.db
+*.mdf
+*.ldf
+
+# Ignore environment files
+.env
+.env.local
+
+# Ignore generated files
+*.g.cs
+*.Generated.cs
+
+# Ignore dependencies and lock files
+project.lock.json
+project.fragment.lock.json
+
+# Ignore Docker artifacts
+docker-compose.override.yml
+**/.dockerignore
+
+# Ignore node_modules for frontend code (if applicable)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Docker artifacts
+*.tar
+docker-compose.override.yml
+
+# EF Core Migrations snapshots
+Migrations/
