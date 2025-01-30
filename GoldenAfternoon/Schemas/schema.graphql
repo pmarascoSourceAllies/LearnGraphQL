@@ -1,7 +1,16 @@
+enum Permissions {
+  VIEW_USERS
+  EDIT_USERS
+  DELETE_USERS
+  MANAGE_ORDERS
+  VIEW_ORDERS
+  EDIT_ORDERS
+}
+
 # Root Query Type
 type Query {
   # User Queries
-  users: [User!]!
+  users(search: String, roleID: Role): [User]!
   user(id: ID!): User
 
   # Product Queries
@@ -45,12 +54,20 @@ type Mutation {
   createPayment(input: CreatePaymentInput!): Payment!
 }
 
+# Role Type
+type Role {
+  id: ID!
+  name: String!
+  permissions: [Permissions!]!
+}
+
 # User Type
 type User {
   id: ID!
   name: String!
   email: String!
-  role: String!
+  role: Role!
+  orders: [Order!]!
   createdAt: String!
   updatedAt: String!
 }
@@ -62,6 +79,7 @@ type Product {
   description: String
   price: Float!
   stock: Int!
+  imageUrl: String!
   category: Category
   createdAt: String!
   updatedAt: String!
@@ -71,7 +89,7 @@ type Product {
 type Category {
   id: ID!
   name: String!
-  description: String
+  description: String!
   products: [Product!]!
   createdAt: String!
   updatedAt: String!
@@ -80,20 +98,21 @@ type Category {
 # Order Type
 type Order {
   id: ID!
+  orderNumber: String!
   user: User!
   status: String!
   totalPrice: Float!
+  payment: Payment!
   items: [OrderItem!]!
   createdAt: String!
   updatedAt: String!
 }
 
-# Order Item Type
+# Order Item Type Is a product in an order and how many of the product
 type OrderItem {
   id: ID!
   product: Product!
   quantity: Int!
-  price: Float!
 }
 
 # Payment Type
@@ -107,17 +126,22 @@ type Payment {
 }
 
 # Inputs for Mutations
+input RegisterRoleInput {
+  name: String!
+}
+
 input RegisterUserInput {
   name: String!
   email: String!
   password: String!
-  role: String! # e.g., Admin, Customer
+  role: Role! # e.g., Admin, Customer
 }
 
 input UpdateUserInput {
   name: String
   email: String
   password: String
+  role: Role
 }
 
 input AddProductInput {
@@ -125,6 +149,7 @@ input AddProductInput {
   description: String
   price: Float!
   stock: Int!
+  imageUrl: String!
   categoryId: ID!
 }
 
@@ -133,22 +158,25 @@ input UpdateProductInput {
   description: String
   price: Float
   stock: Int
+  imageUrl: String
   categoryId: ID
 }
 
 input AddCategoryInput {
   name: String!
-  description: String
+  description: String!
 }
 
 input UpdateCategoryInput {
   name: String
   description: String
+  products: [Product!]
 }
 
 input CreateOrderInput {
-  userId: ID!
+  user: User!
   items: [OrderItemInput!]!
+  payment: CreatePaymentInput!
 }
 
 input OrderItemInput {
