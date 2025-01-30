@@ -1,24 +1,34 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace ChelsEsite.GoldenAfternoon.Data;
+public enum Role
+{
+    ADMIN,
+    USER,
+    GUEST
+}
 
 public sealed class User
 {
-    public int Id { get; init; }
+    [Key]
+    public Guid Id { get; init; }
 
     [StringLength(200)]
-    public required string Name { get; init; }
+    public required string Name { get; set; }
 
     [StringLength(320)] // Max length for email addresses
     [EmailAddress]
-    public required string Email { get; init; }
-
-    [StringLength(100)]
-    public required string Role { get; init; } // e.g., Admin, Customer
+    public required string Email { get; set; }
 
     [DataType(DataType.Password)]
-    public required string PasswordHash { get; init; }
-    // public required string Password { get; init; }
+    public required string PasswordHash { get; set; }
+
+    // One-to-One: Each User has ONE Role
+    public Role Role { get; set; } // e.g., Admin, Customer
+
+    // One-to-Many: Each User has Many Orders
+    public ICollection<Order>? Orders { get; set; }
+
 
     [DataType(DataType.DateTime)]
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;

@@ -1,10 +1,6 @@
-enum Permissions {
-  VIEW_USERS
-  EDIT_USERS
-  DELETE_USERS
-  MANAGE_ORDERS
-  VIEW_ORDERS
-  EDIT_ORDERS
+enum Role {
+  Admin
+  Customer
 }
 
 # Root Query Type
@@ -32,17 +28,17 @@ type Query {
 # Root Mutation Type
 type Mutation {
   # User Mutations
-  registerUser(input: RegisterUserInput!): User!
+  createUser(input: CreateUserInput!): User!
   updateUser(id: ID!, input: UpdateUserInput!): User!
   deleteUser(id: ID!): Boolean!
 
   # Product Mutations
-  addProduct(input: AddProductInput!): Product!
+  createProduct(input: CreateProductInput!): Product!
   updateProduct(id: ID!, input: UpdateProductInput!): Product!
   deleteProduct(id: ID!): Boolean!
 
   # Category Mutations
-  addCategory(input: AddCategoryInput!): Category!
+  createCategory(input: CreateCategoryInput!): Category!
   updateCategory(id: ID!, input: UpdateCategoryInput!): Category!
   deleteCategory(id: ID!): Boolean!
 
@@ -54,20 +50,14 @@ type Mutation {
   createPayment(input: CreatePaymentInput!): Payment!
 }
 
-# Role Type
-type Role {
-  id: ID!
-  name: String!
-  permissions: [Permissions!]!
-}
-
 # User Type
 type User {
   id: ID!
   name: String!
   email: String!
+  passwordHash: String!
   role: Role!
-  orders: [Order!]!
+  orders: [Order!]
   createdAt: String!
   updatedAt: String!
 }
@@ -80,7 +70,7 @@ type Product {
   price: Float!
   stock: Int!
   imageUrl: String!
-  category: Category
+  category: Category!
   createdAt: String!
   updatedAt: String!
 }
@@ -90,7 +80,7 @@ type Category {
   id: ID!
   name: String!
   description: String!
-  products: [Product!]!
+  products: [Product!]
   createdAt: String!
   updatedAt: String!
 }
@@ -98,12 +88,11 @@ type Category {
 # Order Type
 type Order {
   id: ID!
-  orderNumber: String!
   user: User!
   status: String!
+  items: [OrderItem!]!
   totalPrice: Float!
   payment: Payment!
-  items: [OrderItem!]!
   createdAt: String!
   updatedAt: String!
 }
@@ -113,6 +102,7 @@ type OrderItem {
   id: ID!
   product: Product!
   quantity: Int!
+  price: Float!
 }
 
 # Payment Type
@@ -123,14 +113,10 @@ type Payment {
   method: String!
   status: String!
   createdAt: String!
+  updatedAt: String!
 }
 
-# Inputs for Mutations
-input RegisterRoleInput {
-  name: String!
-}
-
-input RegisterUserInput {
+input CreateUserInput {
   name: String!
   email: String!
   password: String!
@@ -144,7 +130,7 @@ input UpdateUserInput {
   role: Role
 }
 
-input AddProductInput {
+input CreateProductInput {
   name: String!
   description: String
   price: Float!
@@ -162,7 +148,7 @@ input UpdateProductInput {
   categoryId: ID
 }
 
-input AddCategoryInput {
+input CreateCategoryInput {
   name: String!
   description: String!
 }
