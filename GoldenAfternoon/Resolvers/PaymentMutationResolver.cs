@@ -2,22 +2,12 @@ using ChelsEsite.GoldenAfternoon.Data;
 using ChelsEsite.GoldenAfternoon.Inputs;
 using Microsoft.EntityFrameworkCore;
 
-public class PaymentResolver
+namespace ChelsEsite.GoldenAfternoon.Resolvers;
+[MutationType]
+public class PaymentMutationResolver(ApplicationDbContext dbContext)
 {
-    private readonly ApplicationDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext = dbContext;
 
-    public PaymentResolver(ApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
-    [Query]
-    public async Task<Payment?> GetPayment(Guid id, CancellationToken cancellationToken)
-    {
-        return await _dbContext.Payments.FindAsync(id, cancellationToken);
-    }
-
-    [Mutation]
     public async Task<Payment> CreatePayment(CreatePaymentInput input, CancellationToken cancellationToken)
     {
         if (await _dbContext.Payments.AnyAsync(p => p.Order.Id == input.OrderId))

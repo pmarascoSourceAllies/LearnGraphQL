@@ -4,6 +4,8 @@ namespace ChelsEsite.GoldenAfternoon.Data;
 
 public sealed class OrderItem
 {
+    [Key]
+    public required Guid Id { get; init; }
     // Composite Primary Key (OrderId, ProductId)
     public required Guid OrderId { get; init; }
     public required Order Order { get; init; }

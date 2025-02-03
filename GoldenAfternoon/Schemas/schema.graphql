@@ -1,7 +1,8 @@
-enum Role {
-  Admin
-  Customer
-}
+# enum Role {
+#   Admin
+#   Customer
+#   Guest
+# }
 
 # Root Query Type
 type Query {
@@ -90,7 +91,7 @@ type Order {
   id: ID!
   user: User!
   status: String!
-  items: [OrderItem!]!
+  orderItems: [OrderItem!]!
   totalPrice: Float!
   payment: Payment!
   createdAt: String!

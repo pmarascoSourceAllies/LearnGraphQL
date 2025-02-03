@@ -2,34 +2,18 @@ using ChelsEsite.GoldenAfternoon.Data;
 using ChelsEsite.GoldenAfternoon.Inputs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-public class UserResolver
+namespace ChelsEsite.GoldenAfternoon.Resolvers;
+[MutationType]
+public class UserMutatonResolver
 {
     private readonly ApplicationDbContext _dbContext;
     private PasswordHasher<string> passwordHasher = new PasswordHasher<string>();
 
-    public UserResolver(ApplicationDbContext dbContext)
+    public UserMutatonResolver(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
-    }
-    [Query]
-    public async Task<IEnumerable<User>> GetUsers(string? search, Role? role, CancellationToken cancellationToken)
-    {
-        var query = _dbContext.Users.AsQueryable();
-
-        if (!string.IsNullOrEmpty(search))
-            query = query.Where(u => u.Name.Contains(search));
-
-        if (role != null)
-            query = query.Where(u => u.Role == role);
-
-        return await query.ToListAsync(cancellationToken);
-    }
-
-    [Query]
-    public async Task<User?> GetUser(Guid id, CancellationToken cancellationToken)
-    {
-        return await _dbContext.Users.FindAsync(id, cancellationToken);
     }
 
     [Mutation]
@@ -59,9 +43,7 @@ public class UserResolver
     [Mutation]
     public async Task<User> UpdateUser(Guid id, UpdateUserInput input, CancellationToken cancellationToken)
     {
-        var user = await _dbContext.Users.FindAsync(id);
-        if (user == null) throw new Exception("User not found.");
-
+        var user = await _dbContext.Users.FindAsync([id], cancellationToken: cancellationToken) ?? throw new Exception("User not found.");
         user.Name = input.Name ?? user.Name;
         if (input.Email != null)
         {
@@ -82,7 +64,7 @@ public class UserResolver
     [Mutation]
     public async Task<bool> DeleteUser(Guid id, CancellationToken cancellationToken)
     {
-        var user = await _dbContext.Users.FindAsync(id);
+        var user = await _dbContext.Users.FindAsync([id], cancellationToken);
         if (user == null) return false;
 
         _dbContext.Users.Remove(user);

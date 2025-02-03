@@ -1,6 +1,6 @@
 namespace ChelsEsite.GoldenAfternoon.Inputs
 {
-    public class CreateOrderInput
+    public sealed record CreateOrderInput
     {
         [GraphQLNonNullType]
         public required Guid UserId { get; set; }  // ✅ Reference to the User

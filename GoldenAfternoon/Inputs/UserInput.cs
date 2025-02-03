@@ -4,7 +4,7 @@ using ChelsEsite.GoldenAfternoon.Data;
 
 namespace ChelsEsite.GoldenAfternoon.Inputs
 {
-    public class CreateUserInput
+    public sealed record CreateUserInput
     {
         [GraphQLNonNullType]
         public string Name { get; set; } = string.Empty;
@@ -18,7 +18,7 @@ namespace ChelsEsite.GoldenAfternoon.Inputs
         [GraphQLNonNullType]
         public Role Role { get; set; }  // Enum-based role
     }
-    public class UpdateUserInput
+    public sealed record UpdateUserInput
     {
         public string? Name { get; set; }
         public string? Email { get; set; }

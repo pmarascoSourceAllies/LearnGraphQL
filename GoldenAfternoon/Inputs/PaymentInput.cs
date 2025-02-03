@@ -2,7 +2,7 @@
 
 namespace ChelsEsite.GoldenAfternoon.Inputs
 {
-    public class CreatePaymentInput
+    public sealed record CreatePaymentInput
     {
         [GraphQLNonNullType]
         public required Guid OrderId { get; set; }  // ✅ Required Order ID

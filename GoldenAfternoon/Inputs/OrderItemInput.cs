@@ -1,6 +1,6 @@
 namespace ChelsEsite.GoldenAfternoon.Inputs
 {
-    public class OrderItemInput
+    public sealed record OrderItemInput
     {
         [GraphQLNonNullType]
         public required Guid ProductId { get; set; }  // ✅ Product being ordered

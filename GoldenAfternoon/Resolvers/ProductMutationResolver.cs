@@ -2,34 +2,11 @@ using ChelsEsite.GoldenAfternoon.Data;
 using ChelsEsite.GoldenAfternoon.Inputs;
 using Microsoft.EntityFrameworkCore;
 
-public class ProductResolver
+namespace ChelsEsite.GoldenAfternoon.Resolvers;
+[MutationType]
+public class ProductResolver(ApplicationDbContext dbContext)
 {
-    private readonly ApplicationDbContext _dbContext;
-
-    public ProductResolver(ApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
-    [Query]
-    public async Task<IEnumerable<Product>> GetProducts(Guid? categoryId, string? search, CancellationToken cancellationToken)
-    {
-        var query = _dbContext.Products.AsQueryable();
-
-        if (categoryId.HasValue)
-            query = query.Where(p => p.CategoryId == categoryId);
-
-        if (!string.IsNullOrEmpty(search))
-            query = query.Where(p => p.Name.Contains(search));
-
-        return await query.ToListAsync(cancellationToken);
-    }
-
-    [Query]
-    public async Task<Product?> GetProduct(Guid id, CancellationToken cancellationToken)
-    {
-        return await _dbContext.Products.FindAsync(id, cancellationToken);
-    }
+    private readonly ApplicationDbContext _dbContext = dbContext;
 
     [Mutation]
     public async Task<Product> CreateProduct(CreateProductInput input, CancellationToken cancellationToken)
@@ -37,9 +14,7 @@ public class ProductResolver
         if (await _dbContext.Products.AnyAsync(p => p.Name == input.Name))
             throw new Exception("Product already exists.");
 
-        var category = await _dbContext.Categories.FindAsync(input.CategoryID);
-        if (category == null) throw new Exception("Category not found.");
-
+        var category = await _dbContext.Categories.FindAsync(cancellationToken, input.CategoryID) ?? throw new Exception("Category not found.");
         var product = new Product
         {
             Id = Guid.NewGuid(),

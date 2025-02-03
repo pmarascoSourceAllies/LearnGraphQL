@@ -1,14 +1,12 @@
 using ChelsEsite.GoldenAfternoon.Data;
+using ChelsEsite.GoldenAfternoon.Inputs;
 using Microsoft.EntityFrameworkCore;
 
-public class OrderResolver
+namespace ChelsEsite.GoldenAfternoon.Resolvers;
+[QueryType]
+public class OrderQueryResolver(ApplicationDbContext dbContext)
 {
-    private readonly ApplicationDbContext _dbContext;
-
-    public OrderResolver(ApplicationDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    private readonly ApplicationDbContext _dbContext = dbContext;
 
     [Query]
     public async Task<IEnumerable<Order>> GetOrders(Guid? userId, CancellationToken cancellationToken)

@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>ChelsEsite.GoldenAfternoon</RootNamespace>
+    <NoWarn>GD001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

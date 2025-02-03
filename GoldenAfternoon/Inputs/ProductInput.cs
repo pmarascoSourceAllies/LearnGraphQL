@@ -4,7 +4,7 @@ using ChelsEsite.GoldenAfternoon.Data;
 
 namespace ChelsEsite.GoldenAfternoon.Inputs
 {
-    public class CreateProductInput
+    public sealed record CreateProductInput
     {
         [GraphQLNonNullType]
         public required string Name { get; set; }
