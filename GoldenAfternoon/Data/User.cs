@@ -23,7 +23,6 @@ public sealed class User
     // One-to-Many: Each User has Many Orders
     public ICollection<Order>? Orders { get; set; }
 
-
     [DataType(DataType.DateTime)]
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 

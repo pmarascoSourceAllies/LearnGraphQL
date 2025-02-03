@@ -1,8 +1,8 @@
-# enum Role {
-#   Admin
-#   Customer
-#   Guest
-# }
+enum Role {
+  Admin
+  Customer
+  Guest
+}
 
 # Root Query Type
 type Query {
@@ -41,6 +41,7 @@ type Mutation {
   # Category Mutations
   createCategory(input: CreateCategoryInput!): Category!
   updateCategory(id: ID!, input: UpdateCategoryInput!): Category!
+  addProductToCategory(id: ID!, input: AddProductToCategoryInput!): Category!
   deleteCategory(id: ID!): Boolean!
 
   # Order Mutations
@@ -157,11 +158,15 @@ input CreateCategoryInput {
 input UpdateCategoryInput {
   name: String
   description: String
-  products: [Product!]
+  productIds: [ID!]
+}
+
+input AddProductToCategoryInput {
+  productIds: [ID!]!
 }
 
 input CreateOrderInput {
-  user: User!
+  userID: ID!
   items: [OrderItemInput!]!
   payment: CreatePaymentInput!
 }

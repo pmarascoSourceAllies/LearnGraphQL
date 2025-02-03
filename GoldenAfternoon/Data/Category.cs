@@ -14,4 +14,10 @@ public sealed class Category
 
     // One-to-Many with Product
     public ICollection<Product>? Products { get; set; }
+
+    [DataType(DataType.DateTime)]
+    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+
+    [DataType(DataType.DateTime)]
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
