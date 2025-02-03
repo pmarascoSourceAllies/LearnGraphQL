@@ -1,0 +1,183 @@
+enum Role {
+  Admin
+  Customer
+  Guest
+}
+
+# Root Query Type
+type Query {
+  # User Queries
+  users(search: String, roleID: Role): [User]!
+  user(id: ID!): User
+
+  # Product Queries
+  products(categoryId: ID, search: String): [Product!]!
+  product(id: ID!): Product
+
+  # Category Queries
+  categories: [Category!]!
+  category(id: ID!): Category
+
+  # Order Queries
+  orders(userId: ID!): [Order!]!
+  order(id: ID!): Order
+
+  # Payment Queries
+  payment(id: ID!): Payment
+}
+
+# Root Mutation Type
+type Mutation {
+  # User Mutations
+  createUser(input: CreateUserInput!): User!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
+
+  # Product Mutations
+  createProduct(input: CreateProductInput!): Product!
+  updateProduct(id: ID!, input: UpdateProductInput!): Product!
+  deleteProduct(id: ID!): Boolean!
+
+  # Category Mutations
+  createCategory(input: CreateCategoryInput!): Category!
+  updateCategory(id: ID!, input: UpdateCategoryInput!): Category!
+  addProductToCategory(id: ID!, input: AddProductToCategoryInput!): Category!
+  deleteCategory(id: ID!): Boolean!
+
+  # Order Mutations
+  createOrder(input: CreateOrderInput!): Order!
+  updateOrderStatus(id: ID!, status: String!): Order!
+
+  # Payment Mutations
+  createPayment(input: CreatePaymentInput!): Payment!
+}
+
+# User Type
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  passwordHash: String!
+  role: Role!
+  orders: [Order!]
+  createdAt: String!
+  updatedAt: String!
+}
+
+# Product Type
+type Product {
+  id: ID!
+  name: String!
+  description: String
+  price: Float!
+  stock: Int!
+  imageUrl: String!
+  category: Category!
+  createdAt: String!
+  updatedAt: String!
+}
+
+# Category Type
+type Category {
+  id: ID!
+  name: String!
+  description: String!
+  products: [Product!]
+  createdAt: String!
+  updatedAt: String!
+}
+
+# Order Type
+type Order {
+  id: ID!
+  user: User!
+  status: String!
+  orderItems: [OrderItem!]!
+  totalPrice: Float!
+  payment: Payment!
+  createdAt: String!
+  updatedAt: String!
+}
+
+# Order Item Type Is a product in an order and how many of the product
+type OrderItem {
+  id: ID!
+  product: Product!
+  quantity: Int!
+  price: Float!
+}
+
+# Payment Type
+type Payment {
+  id: ID!
+  order: Order!
+  amount: Float!
+  method: String!
+  status: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String!
+  role: Role! # e.g., Admin, Customer
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  password: String
+  role: Role
+}
+
+input CreateProductInput {
+  name: String!
+  description: String
+  price: Float!
+  stock: Int!
+  imageUrl: String!
+  categoryId: ID!
+}
+
+input UpdateProductInput {
+  name: String
+  description: String
+  price: Float
+  stock: Int
+  imageUrl: String
+  categoryId: ID
+}
+
+input CreateCategoryInput {
+  name: String!
+  description: String!
+}
+
+input UpdateCategoryInput {
+  name: String
+  description: String
+  productIds: [ID!]
+}
+
+input AddProductToCategoryInput {
+  productIds: [ID!]!
+}
+
+input CreateOrderInput {
+  userID: ID!
+  items: [OrderItemInput!]!
+  payment: CreatePaymentInput!
+}
+
+input OrderItemInput {
+  productId: ID!
+  quantity: Int!
+}
+
+input CreatePaymentInput {
+  orderId: ID!
+  amount: Float!
+  method: String! # e.g., Credit Card, PayPal
+}
