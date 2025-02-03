@@ -13,8 +13,6 @@ public class ProductQueryResolver
     {
         _dbContext = dbContext;
     }
-
-    [Query]
     public async Task<IEnumerable<Product>> GetProducts(Guid? categoryId, string? search, CancellationToken cancellationToken)
     {
         var query = _dbContext.Products.AsQueryable();
@@ -28,7 +26,6 @@ public class ProductQueryResolver
         return await query.ToListAsync(cancellationToken);
     }
 
-    [Query]
     public async Task<Product?> GetProduct(Guid id, CancellationToken cancellationToken)
     {
         return await _dbContext.Products.FindAsync(id, cancellationToken);

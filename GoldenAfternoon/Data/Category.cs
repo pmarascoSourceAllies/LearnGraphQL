@@ -8,7 +8,9 @@ public sealed class Category
     public Guid Id { get; set; }
 
     [Required, MaxLength(100)]
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
+
+    public string? Description { get; set; }
 
     // One-to-Many with Product
     public ICollection<Product>? Products { get; set; }

@@ -8,13 +8,12 @@ public class ProductResolver(ApplicationDbContext dbContext)
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
 
-    [Mutation]
     public async Task<Product> CreateProduct(CreateProductInput input, CancellationToken cancellationToken)
     {
-        if (await _dbContext.Products.AnyAsync(p => p.Name == input.Name))
+        if (await _dbContext.Products.AnyAsync(p => p.Name == input.Name, cancellationToken: cancellationToken))
             throw new Exception("Product already exists.");
 
-        var category = await _dbContext.Categories.FindAsync(cancellationToken, input.CategoryID) ?? throw new Exception("Category not found.");
+        var category = await _dbContext.Categories.FindAsync([input.CategoryID], cancellationToken: cancellationToken) ?? throw new Exception("Category not found.");
         var product = new Product
         {
             Id = Guid.NewGuid(),
@@ -33,12 +32,9 @@ public class ProductResolver(ApplicationDbContext dbContext)
         return product;
     }
 
-    [Mutation]
     public async Task<Product> UpdateProduct(Guid id, UpdateProductInput input, CancellationToken cancellationToken)
     {
-        var product = await _dbContext.Products.FindAsync(id);
-        if (product == null) throw new Exception("Product not found.");
-
+        var product = await _dbContext.Products.FindAsync([id], cancellationToken: cancellationToken) ?? throw new Exception("Product not found.");
         if (input.Name != null)
         {
             if (await _dbContext.Products.AnyAsync(p => p.Name == input.Name))
@@ -55,10 +51,9 @@ public class ProductResolver(ApplicationDbContext dbContext)
         return product;
     }
 
-    [Mutation]
     public async Task<bool> DeleteProduct(Guid id, CancellationToken cancellationToken)
     {
-        var product = await _dbContext.Products.FindAsync(id);
+        var product = await _dbContext.Products.FindAsync([id], cancellationToken: cancellationToken);
         if (product == null) return false;
 
         _dbContext.Products.Remove(product);

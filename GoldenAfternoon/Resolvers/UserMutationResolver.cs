@@ -15,8 +15,6 @@ public class UserMutatonResolver
     {
         _dbContext = dbContext;
     }
-
-    [Mutation]
     public async Task<User> CreateUser(CreateUserInput input, CancellationToken cancellationToken)
     {
         if (await _dbContext.Users.AnyAsync(u => u.Email == input.Email))
@@ -39,8 +37,6 @@ public class UserMutatonResolver
 
         return user;
     }
-
-    [Mutation]
     public async Task<User> UpdateUser(Guid id, UpdateUserInput input, CancellationToken cancellationToken)
     {
         var user = await _dbContext.Users.FindAsync([id], cancellationToken: cancellationToken) ?? throw new Exception("User not found.");

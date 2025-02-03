@@ -8,7 +8,8 @@ builder.Services
         options => options.UseNpgsql("Host=127.0.0.1;Username=chelsesite_user;Password=chelsesite_secret"))
     .AddGraphQLServer()
 // .AddDocumentFromFile("Schemas/schema.graphql");
-.AddGoldenAfternoonTypes();
+.AddGoldenAfternoonTypes()
+.ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
 
 var app = builder.Build();
 app.MapGraphQL();

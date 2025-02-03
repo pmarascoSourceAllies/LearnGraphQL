@@ -8,22 +8,6 @@ public class OrderMutationResolver(ApplicationDbContext dbContext)
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
 
-    public async Task<IEnumerable<Order>> GetOrders(Guid? userId, CancellationToken cancellationToken)
-    {
-        var query = _dbContext.Orders.AsQueryable();
-
-        if (userId.HasValue)
-            query = query.Where(p => p.UserID == userId);
-
-        return await query.ToListAsync(cancellationToken);
-    }
-
-    public async Task<Order?> GetOrder(Guid id, CancellationToken cancellationToken)
-    {
-        return await _dbContext.Orders.FindAsync(id, cancellationToken);
-    }
-
-    [Mutation]
     public async Task<Order> CreateOrder(CreateOrderInput input, CancellationToken cancellationToken)
     {
         var user = await _dbContext.Users.FindAsync(input.UserId, cancellationToken);
@@ -65,7 +49,6 @@ public class OrderMutationResolver(ApplicationDbContext dbContext)
         return order;
     }
 
-    [Mutation]
     public async Task<Order> UpdateOrderStatus(Guid id, String status, CancellationToken cancellationToken)
     {
         var order = await _dbContext.Orders.FindAsync(id);
